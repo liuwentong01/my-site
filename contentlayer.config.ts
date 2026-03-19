@@ -128,6 +128,88 @@ export const Blog = defineDocumentType(() => ({
   },
 }))
 
+export const Reading = defineDocumentType(() => ({
+  name: 'Reading',
+  filePathPattern: 'reading/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    author: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    cover: { type: 'string' },
+    rating: { type: 'number' },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    draft: { type: 'boolean' },
+    summary: { type: 'string' },
+  },
+  computedFields,
+}))
+
+export const Notes = defineDocumentType(() => ({
+  name: 'Notes',
+  filePathPattern: 'notes/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    draft: { type: 'boolean' },
+    summary: { type: 'string' },
+  },
+  computedFields,
+}))
+
+export const Photography = defineDocumentType(() => ({
+  name: 'Photography',
+  filePathPattern: 'photography/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    location: { type: 'string' },
+    camera: { type: 'string' },
+    lens: { type: 'string' },
+    cover: { type: 'string', required: true },
+    images: { type: 'json' },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    draft: { type: 'boolean' },
+    summary: { type: 'string' },
+  },
+  computedFields,
+}))
+
+export const Travel = defineDocumentType(() => ({
+  name: 'Travel',
+  filePathPattern: 'travel/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    location: { type: 'string', required: true },
+    cover: { type: 'string' },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    draft: { type: 'boolean' },
+    summary: { type: 'string' },
+  },
+  computedFields,
+}))
+
+export const English = defineDocumentType(() => ({
+  name: 'English',
+  filePathPattern: 'english/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    date: { type: 'date', required: true },
+    tags: { type: 'list', of: { type: 'string' }, default: [] },
+    draft: { type: 'boolean' },
+    summary: { type: 'string' },
+    words: { type: 'json' },
+    sentences: { type: 'json' },
+  },
+  computedFields,
+}))
+
 export const Authors = defineDocumentType(() => ({
   name: 'Authors',
   filePathPattern: 'authors/**/*.mdx',
@@ -149,7 +231,7 @@ export const Authors = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors],
+  documentTypes: [Blog, Reading, Notes, Photography, Travel, English, Authors],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
@@ -180,8 +262,17 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
-    const { allBlogs } = await importData()
-    createTagCount(allBlogs)
+    const { allBlogs, allReadings, allNotes, allPhotographies, allTravels, allEnglishes } =
+      await importData()
+    const allTaggableContent = [
+      ...allBlogs,
+      ...allReadings,
+      ...allNotes,
+      ...allPhotographies,
+      ...allTravels,
+      ...allEnglishes,
+    ]
+    createTagCount(allTaggableContent)
     createSearchIndex(allBlogs)
   },
 })

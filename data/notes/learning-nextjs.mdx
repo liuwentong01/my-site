@@ -1,0 +1,25 @@
+---
+title: Learning Next.js App Router
+date: '2026-03-18'
+tags: ['nextjs', 'react', 'notes']
+draft: false
+summary: Notes on learning Next.js App Router - key concepts and patterns.
+---
+
+## App Router Key Concepts
+
+### Server Components
+
+By default, all components in the App Router are Server Components. They run on the server and send HTML to the client.
+
+### Client Components
+
+Add `'use client'` directive at the top of the file to make a component a Client Component.
+
+### Layouts
+
+Layouts wrap pages and preserve state across navigation. The root layout is required.
+
+### Loading and Error States
+
+Use `loading.tsx` and `error.tsx` for automatic loading and error UI.
